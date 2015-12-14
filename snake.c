@@ -33,10 +33,11 @@ void mainloop(struct Head *head)
 
     while ( run_loop ) {
 
+        move_snake(head);
         if (draw_snake(head))
             break;
 
-        move_snake(head);
+        //move_snake(head);
 
         if (head->ate) {
             head->ate = 0;
@@ -112,7 +113,7 @@ void add_segment(struct Head *head)
 {
     struct Snake *segment = head->body;
 
-    while (segment->next_segment)
+    while (segment->next_segment != NULL)
         segment = segment->next_segment;
 
     int direction = segment->direction;
@@ -149,7 +150,7 @@ int check_segment_intersections(struct Head *head, struct Snake *segment)
 {
     struct Snake *current = head->body;
 
-    while (current) {
+    while (current != NULL) {
 
         if (segment == current) {
             current = current->next_segment;
@@ -169,7 +170,7 @@ void move_snake(struct Head *head)
 {
     struct Snake *current = head->body;
    
-    while (current) {
+    while (current != NULL) {
         update_segment_coordinates(current);
 
         if (current->x == head->food_x && current->y == head->food_y) 
@@ -189,7 +190,7 @@ void update_segment_direction(struct Head *head)
     current->prev_direction = current->direction;
     current->direction = head->direction;
 
-    while (current->next_segment) {
+    while (current->next_segment != NULL) {
         int direction = current->prev_direction;
         current = current->next_segment;
         current->prev_direction = current->direction;
