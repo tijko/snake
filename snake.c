@@ -34,10 +34,9 @@ void mainloop(struct Head *head)
     while ( run_loop ) {
 
         move_snake(head);
+
         if (draw_snake(head))
             break;
-
-        //move_snake(head);
 
         if (head->ate) {
             head->ate = 0;
