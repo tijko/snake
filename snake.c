@@ -112,6 +112,7 @@ int draw_snake(struct Head *head)
 void add_segment(struct Head *head)
 {
     struct Snake *segment = head->body;
+    head->length++;
 
     while (segment->next_segment != NULL)
         segment = segment->next_segment;
@@ -262,7 +263,7 @@ struct Head *init_snake_head(int max_x, int max_y)
     new_head->max_y = max_y;
     new_head->direction = WEST;
     new_head->length = SNAKE_INIT_LEN;
-    new_head->speed = 1;
+    new_head->length = 4;
     new_head->ate = 1;
     new_head->body = init_snake_body(max_x, max_y);
 
