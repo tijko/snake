@@ -38,6 +38,8 @@ void mainloop(struct Head *head)
         if (draw_snake(head))
             break;
 
+        refresh();
+
         if (head->ate) {
             head->ate = 0;
             place_snake_food(head);
@@ -84,7 +86,6 @@ void mainloop(struct Head *head)
         update_segment_direction(head);
 
         clear();
-        refresh();
     }
 }
 
