@@ -83,8 +83,8 @@ void mainloop(struct Head *head)
         delay_output(GAME_SPEED);
         update_segment_direction(head);
 
-        refresh();
         clear();
+        refresh();
     }
 }
 
@@ -115,11 +115,10 @@ void add_segment(struct Head *head)
     while (segment->next_segment != NULL)
         segment = segment->next_segment;
 
-    int direction = segment->direction;
     int x = segment->x;
     int y = segment->y;
 
-    switch (direction) {
+    switch (segment->direction) {
 
         case (NORTH): {
             y++;
@@ -233,8 +232,7 @@ void place_snake_food(struct Head *head)
         food_x = rand() % head->max_x;
         food_y = rand() % head->max_y;        
 
-        int valid_position = is_valid_position(segment, food_x, food_y);
-        if (valid_position == 0) 
+        if (is_valid_position(segment, food_x, food_y) == 0);
             break;
     }
 
