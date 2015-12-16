@@ -54,19 +54,21 @@ void place_snake_food(struct Head *head);
 // Check if current coordinate is a valid position (i.e. no intersection).
 int is_valid_position(struct Snake *segment, int x, int y);
 
-// Check if snake intersects with itself.
+// Check if any snake segments intersects with each other.
 int check_segment_intersections(struct Head *head, struct Snake *segment);
 
-// Move snake along.
+// Calls for an update of all snake segments and checks if any food has been
+// eaten.
 void move_snake(struct Head *head);
 
-// Change snake segment coordinates.
+// Change snake segment coordinates relative to their predecessors previous 
+// direction.
 void update_segment_direction(struct Head *head);
 
-// Changes the snakes position depending on direction.
+// Update snake segments, incrementing along their current direction.
 void update_segment_coordinates(struct Snake *segment);
 
-// Create segment of snake.
+// Creates new Snake structure to add to snake.
 struct Snake *create_segment(int direction, int x, int y);
 
 // Creates a new segment after snake eats some food.
