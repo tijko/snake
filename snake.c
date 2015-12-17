@@ -323,7 +323,7 @@ void free_snake_body(struct Snake *body)
 void print_score(struct Head *head)
 {
     clear();
-    mvprintw(head->max_y / 2, (head->max_x  - 3)/ 2, "SCORE: %d", head->length - 4);
+    mvprintw(head->max_y / 2, (head->max_x  - 8)/ 2, "SCORE: %d", head->length - 4);
     refresh();
     sleep(2);
 }
