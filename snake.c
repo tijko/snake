@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <ncurses.h>
 
@@ -20,6 +21,7 @@ int main(int argc, char *argv[])
     struct Head *snake_head = init_snake_head(max_x, max_y);
 
     mainloop(snake_head);
+    print_score(snake_head);
     free_snake(snake_head);
 
     endwin();
@@ -316,4 +318,12 @@ void free_snake_body(struct Snake *body)
         free(body);
         body = next;
     }
+}
+
+void print_score(struct Head *head)
+{
+    clear();
+    mvprintw(head->max_y / 2, (head->max_x  - 3)/ 2, "SCORE: %d", head->length - 4);
+    refresh();
+    sleep(2);
 }
