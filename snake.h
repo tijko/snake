@@ -80,6 +80,9 @@ void free_snake(struct Head *snake_head);
 // Frees memory of the snakes body.
 void free_snake_body(struct Snake *body);
 
+// Prints the end game score.
+void print_score(struct Head *head);
+
 #define KEY_Q 113
 
 #endif
