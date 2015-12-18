@@ -314,9 +314,9 @@ void free_snake(struct Head *snake_head)
 void free_snake_body(struct Snake *body)
 {
     while (body != NULL) {
-        struct Snake *next = body->next_segment;
-        free(body);
-        body = next;
+        struct Snake *prev_segment = body;
+        body = body->next_segment;
+        free(prev_segment);
     }
 }
 
