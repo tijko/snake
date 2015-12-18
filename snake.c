@@ -247,14 +247,9 @@ void place_snake_food(struct Head *head)
 
 int is_valid_position(struct Snake *segment, int x, int y)
 {
-    while (segment != NULL) {
-
+    for (; segment != NULL; segment=segment->next_segment)
         if (segment->x == x && segment->y == y)
             return 1;
-
-        segment = segment->next_segment;
-    }
-
     return 0;
 }
 
