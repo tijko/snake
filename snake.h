@@ -43,7 +43,7 @@ struct Head *init_snake_head(int max_x, int max_y);
 struct Snake *init_snake_body(int max_x, int max_y);
 
 // Main game loop.
-void mainloop(struct Head *head);
+void mainloop(void);
 
 // Draws the snake body to window.
 int draw_snake(struct Head *head);
@@ -81,8 +81,13 @@ void free_snake(struct Head *snake_head);
 void free_snake_body(struct Snake *body);
 
 // Prints the end game score.
-void print_score(struct Head *head);
+void print_score(int score, int x, int y);
 
+// Asks if another game is to be played.
+void play_again(int x, int y);
+
+#define KEY_N 110
 #define KEY_Q 113
+#define KEY_Y 121
 
 #endif
