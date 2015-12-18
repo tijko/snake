@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <ncurses.h>
 
@@ -11,29 +10,26 @@ int main(int argc, char *argv[])
     initscr();
     noecho();
     cbreak();
+ 
     keypad(stdscr, TRUE);
     curs_set(0);
     nodelay(stdscr, TRUE);
 
-    int max_x, max_y;
-    getmaxyx(stdscr, max_y, max_x);
-
-    struct Head *snake_head = init_snake_head(max_x, max_y);
-
-    mainloop(snake_head);
-    print_score(snake_head);
-    free_snake(snake_head);
-
+    mainloop();
     endwin();
     
     return 0;
 }
 
-void mainloop(struct Head *head)
+void mainloop(void)
 {
-    int run_loop = 1;
+    int max_x, max_y;
 
-    while ( run_loop ) {
+    getmaxyx(stdscr, max_y, max_x);
+
+    struct Head *head = init_snake_head(max_x, max_y);
+
+    while ( 1 ) {
 
         move_snake(head);
 
@@ -75,8 +71,8 @@ void mainloop(struct Head *head)
             }
 
             case (KEY_Q): {
-                run_loop = 0;
-                break;
+                free_snake(head);
+                return;
             }
 
             default: 
@@ -87,8 +83,20 @@ void mainloop(struct Head *head)
         delay_output(GAME_SPEED);
         update_segment_direction(head);
 
+        getmaxyx(stdscr, max_y, max_x);
+        head->max_x = max_x;
+        head->max_y = max_y;
+
         clear();
     }
+
+    int score = head->length - 5;
+    int print_x = (head->max_x - 8) / 2;
+    int print_y = head->max_y / 2;
+
+    free_snake(head);
+
+    print_score(score, print_x, print_y);
 }
 
 int draw_snake(struct Head *head)
@@ -260,7 +268,6 @@ struct Head *init_snake_head(int max_x, int max_y)
     new_head->max_y = max_y;
     new_head->direction = WEST;
     new_head->length = SNAKE_INIT_LEN;
-    new_head->length = 4;
     new_head->ate = 1;
     new_head->body = init_snake_body(max_x, max_y);
 
@@ -315,10 +322,32 @@ void free_snake_body(struct Snake *body)
     }
 }
 
-void print_score(struct Head *head)
+void print_score(int score, int x, int y)
 {
     clear();
-    mvprintw(head->max_y / 2, (head->max_x  - 8)/ 2, "SCORE: %d", head->length - 4);
+    mvprintw(y, x, "SCORE: %d", score);
     refresh();
-    sleep(2);
+    play_again(x, y + 2);
+}
+
+void play_again(int x, int y)
+{
+    mvprintw(y, x - 5, "PLAY AGAIN? (Y/N)");
+
+    while ( 1 ) {
+        switch (getch()) {
+
+            case (KEY_Y): {
+                clear();
+                mainloop();            
+                break;
+            }
+
+            case (KEY_N):
+                return;
+
+            default:
+                break;
+        }
+    }
 }
