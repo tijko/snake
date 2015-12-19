@@ -4,11 +4,6 @@
 
 #define SNAKE_INIT_LEN 4
 
-#define SEGMENT_WIDTH 5
-#define SEGMENT_HEIGHT 5
-
-#define GAME_SPEED 150
-
 enum {
     NORTH,
     SOUTH,
