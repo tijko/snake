@@ -25,6 +25,8 @@ void mainloop(void)
 {
     int max_x, max_y;
 
+    int game_speed = 150;
+
     getmaxyx(stdscr, max_y, max_x);
 
     struct Head *head = init_snake_head(max_x, max_y);
@@ -41,6 +43,8 @@ void mainloop(void)
         if (head->ate) {
             head->ate = 0;
             place_snake_food(head);
+            game_speed = (head->length - 4) % 5 == 0 && game_speed > 25 ? 
+                          game_speed - 5 : game_speed;
         } else
             mvaddch(head->food_y, head->food_x, ACS_PI);
 
@@ -80,7 +84,7 @@ void mainloop(void)
         }
 
         // flash/beep
-        delay_output(GAME_SPEED);
+        delay_output(game_speed);
         update_segment_direction(head);
 
         getmaxyx(stdscr, max_y, max_x);
