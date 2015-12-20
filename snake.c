@@ -253,7 +253,7 @@ void place_snake_food(struct Head *head)
         food_x = rand() % head->max_x;
         food_y = rand() % head->max_y;        
 
-        if (is_valid_position(segment, food_x, food_y) == 0);
+        if (is_valid_position(segment, food_x, food_y) == 0)
             break;
     }
 
