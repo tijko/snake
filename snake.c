@@ -74,6 +74,11 @@ void mainloop(void)
                 break;
             }
 
+            case (KEY_P): {
+                pause();
+                break;
+            }
+
             case (KEY_Q): {
                 free_snake(head);
                 return;
@@ -323,6 +328,26 @@ void free_snake_body(struct Snake *body)
         struct Snake *prev_segment = body;
         body = body->next_segment;
         free(prev_segment);
+    }
+}
+
+void pause(void)
+{
+    while ( 1 ) {
+
+        int key = getch();
+
+        switch (key) {
+
+            case (KEY_P): {
+                return;
+            }
+
+            case (KEY_Q): {
+                ungetch(key);
+                return;
+            }
+        }
     }
 }
 
