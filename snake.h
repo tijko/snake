@@ -81,7 +81,11 @@ void print_score(int score, int x, int y);
 // Asks if another game is to be played.
 void play_again(int x, int y);
 
+// Pauses the game.
+void pause(void);
+
 #define KEY_N 110
+#define KEY_P 112
 #define KEY_Q 113
 #define KEY_Y 121
 
