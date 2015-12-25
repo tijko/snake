@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <getopt.h>
 #include <stdlib.h>
 #include <ncurses.h>
 
@@ -8,12 +9,60 @@
 int main(int argc, char *argv[])
 {
     initscr();
+    start_color();
+    
+    short color = COLOR_GREEN;
+
+    struct option color_opts[] = {{"color", required_argument, 0, 1},
+                                  {0,       0,                 0, 0}};
+
+    if ((getopt_long_only(argc, argv, "", color_opts, 0)) == 1) {
+
+        switch (*optarg) {
+
+            case ('r'): {
+                color = COLOR_RED;
+                break;
+            }
+
+            case ('b'): {
+                color = COLOR_BLUE;
+                break;
+            }
+
+            case ('c'): {
+                color = COLOR_CYAN;
+                break;
+            }
+
+            case ('y'): {
+                color = COLOR_YELLOW;
+                break;
+            }
+
+            case ('m'): {
+                color = COLOR_MAGENTA;
+                break;
+            }
+
+            case ('w'): {
+                color = COLOR_WHITE;
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
     noecho();
     cbreak();
  
     keypad(stdscr, TRUE);
     curs_set(0);
     nodelay(stdscr, TRUE);
+    init_pair(1, color, COLOR_BLACK); 
+    attron(COLOR_PAIR(1));
 
     mainloop();
     endwin();
