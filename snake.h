@@ -12,10 +12,10 @@ enum {
 };
 
 struct Snake {
-    int x;
-    int y;
-    int direction;
-    int prev_direction;
+    int direction:4;
+    int prev_direction:4;
+    int x:12;
+    int y:12;
     struct Snake *next_segment;
 };
 
@@ -55,13 +55,6 @@ int check_segment_intersections(struct Head *head, struct Snake *segment);
 // Calls for an update of all snake segments and checks if any food has been
 // eaten.
 void move_snake(struct Head *head);
-
-// Change snake segment coordinates relative to their predecessors previous 
-// direction.
-void update_segment_direction(struct Head *head);
-
-// Update snake segments, incrementing along their current direction.
-void update_segment_coordinates(struct Snake *segment);
 
 // Creates new Snake structure to add to snake.
 struct Snake *create_segment(int direction, int x, int y);

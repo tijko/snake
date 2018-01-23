@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
                                   {0,       0,                 0, 0}};
 
     if ((getopt_long_only(argc, argv, "", color_opts, 0)) == 1) {
+        // set invalid arg ... exit
 
         switch (*optarg) {
 
@@ -65,16 +66,57 @@ int main(int argc, char *argv[])
     attron(COLOR_PAIR(1));
 
     mainloop();
+
     endwin();
-    
     return 0;
+}
+
+static inline void update_segment_direction(struct Head *head)
+{
+    struct Snake *current = head->body;
+
+    current->prev_direction = current->direction;
+    current->direction = head->direction;
+
+    while (current->next_segment != NULL) {
+        int direction = current->prev_direction;
+        current = current->next_segment;
+        current->prev_direction = current->direction;
+        current->direction = direction;
+    }
+}
+
+static inline void update_segment_coordinates(struct Snake *segment)
+{
+    switch (segment->direction) {
+
+        case (NORTH): {
+            segment->y--;
+            break;
+        }
+
+        case (SOUTH): {
+            segment->y++;
+            break;
+        }
+
+        case (EAST): {
+            segment->x++;
+            break;
+        }
+
+        case (WEST): {
+            segment->x--;
+            break;
+        }
+    }
 }
 
 void mainloop(void)
 {
     int max_x, max_y;
 
-    int game_speed = 150;
+    int game_speed = 100;
 
     getmaxyx(stdscr, max_y, max_x);
 
@@ -138,7 +180,8 @@ void mainloop(void)
         }
 
         // flash/beep
-        delay_output(game_speed);
+        //delay_output(game_speed);
+        napms(game_speed);
         update_segment_direction(head);
 
         getmaxyx(stdscr, max_y, max_x);
@@ -165,12 +208,12 @@ int draw_snake(struct Head *head)
 
         if (current->x >= head->max_x || current->y >= head->max_y ||
             current->x < 0 || current->y < 0)
-            return 1;
+            return 1; 
 
         if (check_segment_intersections(head, current))
             return 1;
 
-        mvaddch(current->y, current->x, ACS_BLOCK);
+        mvaddch(current->y, current->x, ACS_DIAMOND);
         current = current->next_segment;
     }
 
@@ -249,48 +292,6 @@ void move_snake(struct Head *head)
 
     if (head->ate)
         add_segment(head);
-}
-
-void update_segment_direction(struct Head *head)
-{
-    struct Snake *current = head->body;
-
-    current->prev_direction = current->direction;
-    current->direction = head->direction;
-
-    while (current->next_segment != NULL) {
-        int direction = current->prev_direction;
-        current = current->next_segment;
-        current->prev_direction = current->direction;
-        current->direction = direction;
-    }
-}
-
-void update_segment_coordinates(struct Snake *segment)
-{
-    switch (segment->direction) {
-
-        case (NORTH): {
-            segment->y--;
-            break;
-        }
-
-        case (SOUTH): {
-            segment->y++;
-            break;
-        }
-
-        case (EAST): {
-            segment->x++;
-            break;
-        }
-
-        case (WEST): {
-            segment->x--;
-            break;
-        }
-    }
-
 }
 
 void place_snake_food(struct Head *head)
@@ -429,3 +430,4 @@ void play_again(int x, int y)
         }
     }
 }
+
