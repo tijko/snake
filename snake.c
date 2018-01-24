@@ -263,12 +263,9 @@ int check_segment_intersections(struct Head *head, struct Snake *segment)
 
     while (current != NULL) {
 
-        if (segment == current) {
-            current = current->next_segment;
-            continue;
-        }
-
-        if (segment->x == current->x && segment->y == current->y)
+        if (!(current == segment) &&
+            segment->x == current->x && 
+            segment->y == current->y)
             return 1;
 
         current = current->next_segment;
@@ -281,10 +278,13 @@ void move_snake(struct Head *head)
 {
     struct Snake *current = head->body;
    
+    int food_x = head->food_x;
+    int food_y = head->food_y;
+
     while (current != NULL) {
         update_segment_coordinates(current);
 
-        if (current->x == head->food_x && current->y == head->food_y) 
+        if (current->x == food_x && current->y == food_y) 
             head->ate = 1;
 
         current = current->next_segment;
