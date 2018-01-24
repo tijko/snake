@@ -4,6 +4,14 @@
 
 #define SNAKE_INIT_LEN 4
 
+void print_usage(void);
+
+#define OPT_ERROR       \
+    do {                \
+        print_usage();  \
+        exit(1);        \
+    } while (1)         \
+
 enum {
     NORTH,
     SOUTH,
