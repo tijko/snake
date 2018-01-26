@@ -4,6 +4,22 @@
 
 #define SNAKE_INIT_LEN 4
 
+void print_usage(void);
+
+<<<<<<< HEAD
+#define OPT_ERROR(x)                          \
+    do {                                      \
+        printf("Invalid Option (-%c)!\n", x); \
+        print_usage();                        \
+    } while (1)                               \
+=======
+#define OPT_ERROR       \
+    do {                \
+        print_usage();  \
+        exit(1);        \
+    } while (1)         \
+>>>>>>> 61475893edfdf17370d768c2a9f4f62cb6dd7288
+
 enum {
     NORTH,
     SOUTH,

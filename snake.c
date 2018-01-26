@@ -5,57 +5,86 @@
 
 #include "snake.h"
 
+void print_usage(void)
+{
+    printf("./snake [color_directive] or [print-usage]\n");
+    printf("  Color-Directives:\n");
+    printf("\t-c Cyan\n");
+    printf("\t-y Yellow\n");
+    printf("\t-m Magenta\n");
+    printf("\t-w White\n");
+    printf("  Print-Usage:\n");
+    printf("\t-h Help\n");
+<<<<<<< HEAD
+
+    exit(1);
+=======
+>>>>>>> 61475893edfdf17370d768c2a9f4f62cb6dd7288
+}
 
 int main(int argc, char *argv[])
 {
+    short color = COLOR_BLUE;
+    opterr = 0;
+<<<<<<< HEAD
+
+    switch (getopt(argc, argv, "+rgcymwh")) {
+
+=======
+
+    switch (getopt(argc, argv, "+rgcymwh")) {
+
+>>>>>>> 61475893edfdf17370d768c2a9f4f62cb6dd7288
+        case ('r'): {
+            color = COLOR_RED;
+            break;
+        }
+
+        case ('g'): {
+            color = COLOR_GREEN;
+            break;
+        }
+
+        case ('c'): {
+            color = COLOR_CYAN;
+            break;
+        }
+
+        case ('y'): {
+            color = COLOR_YELLOW;
+            break;
+        }
+
+        case ('m'): {
+            color = COLOR_MAGENTA;
+            break;
+        }
+
+        case ('w'): {
+            color = COLOR_WHITE;
+            break;
+        }
+
+<<<<<<< HEAD
+        case ('h'): { 
+=======
+        case ('h'): {
+>>>>>>> 61475893edfdf17370d768c2a9f4f62cb6dd7288
+            print_usage();
+            break;
+        }
+
+        case ('?'):
+<<<<<<< HEAD
+            OPT_ERROR(argv[1][1]);
+=======
+            OPT_ERROR;
+>>>>>>> 61475893edfdf17370d768c2a9f4f62cb6dd7288
+    }
+
     initscr();
     start_color();
     
-    short color = COLOR_GREEN;
-
-    struct option color_opts[] = {{"color", required_argument, 0, 1},
-                                  {0,       0,                 0, 0}};
-
-    if ((getopt_long_only(argc, argv, "", color_opts, 0)) == 1) {
-        // set invalid arg ... exit
-
-        switch (*optarg) {
-
-            case ('r'): {
-                color = COLOR_RED;
-                break;
-            }
-
-            case ('b'): {
-                color = COLOR_BLUE;
-                break;
-            }
-
-            case ('c'): {
-                color = COLOR_CYAN;
-                break;
-            }
-
-            case ('y'): {
-                color = COLOR_YELLOW;
-                break;
-            }
-
-            case ('m'): {
-                color = COLOR_MAGENTA;
-                break;
-            }
-
-            case ('w'): {
-                color = COLOR_WHITE;
-                break;
-            }
-
-            default:
-                break;
-        }
-    }
-
     noecho();
     cbreak();
  
@@ -68,6 +97,7 @@ int main(int argc, char *argv[])
     mainloop();
 
     endwin();
+
     return 0;
 }
 
@@ -204,9 +234,12 @@ int draw_snake(struct Head *head)
 {
     struct Snake *current = head->body;
 
+    int max_x = head->max_x;
+    int max_y = head->max_y;
+
     while (current != NULL) {
 
-        if (current->x >= head->max_x || current->y >= head->max_y ||
+        if (current->x >= max_x || current->y >= max_y || 
             current->x < 0 || current->y < 0)
             return 1; 
 
@@ -261,11 +294,14 @@ int check_segment_intersections(struct Head *head, struct Snake *segment)
 {
     struct Snake *current = head->body;
 
+    int segment_x = segment->x;
+    int segment_y = segment->y;
+
     while (current != NULL) {
 
         if (!(current == segment) &&
-            segment->x == current->x && 
-            segment->y == current->y)
+            segment_x == current->x && 
+            segment_y == current->y)
             return 1;
 
         current = current->next_segment;
