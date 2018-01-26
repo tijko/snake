@@ -15,6 +15,8 @@ void print_usage(void)
     printf("\t-w White\n");
     printf("  Print-Usage:\n");
     printf("\t-h Help\n");
+
+    exit(1);
 }
 
 int main(int argc, char *argv[])
@@ -54,13 +56,13 @@ int main(int argc, char *argv[])
             break;
         }
 
-        case ('h'): {
+        case ('h'): { 
             print_usage();
             break;
         }
 
         case ('?'):
-            OPT_ERROR;
+            OPT_ERROR(argv[1][1]);
     }
 
     initscr();
@@ -78,6 +80,7 @@ int main(int argc, char *argv[])
     mainloop();
 
     endwin();
+
     return 0;
 }
 

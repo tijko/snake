@@ -6,11 +6,11 @@
 
 void print_usage(void);
 
-#define OPT_ERROR       \
-    do {                \
-        print_usage();  \
-        exit(1);        \
-    } while (1)         \
+#define OPT_ERROR(x)                          \
+    do {                                      \
+        printf("Invalid Option (-%c)!\n", x); \
+        print_usage();                        \
+    } while (1)                               \
 
 enum {
     NORTH,
