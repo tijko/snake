@@ -6,25 +6,11 @@
 
 void print_usage(void);
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 9bb3c5a25e57719dd64920f4871a0f825d9f84ac
 #define OPT_ERROR(x)                          \
     do {                                      \
         printf("Invalid Option (-%c)!\n", x); \
         print_usage();                        \
     } while (1)                               \
-<<<<<<< HEAD
-=======
-=======
-#define OPT_ERROR       \
-    do {                \
-        print_usage();  \
-        exit(1);        \
-    } while (1)         \
->>>>>>> 61475893edfdf17370d768c2a9f4f62cb6dd7288
->>>>>>> 9bb3c5a25e57719dd64920f4871a0f825d9f84ac
 
 enum {
     NORTH,
