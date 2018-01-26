@@ -19,7 +19,12 @@ void print_usage(void)
 
     exit(1);
 =======
+<<<<<<< HEAD
+
+    exit(1);
+=======
 >>>>>>> 61475893edfdf17370d768c2a9f4f62cb6dd7288
+>>>>>>> 9bb3c5a25e57719dd64920f4871a0f825d9f84ac
 }
 
 int main(int argc, char *argv[])
@@ -31,10 +36,16 @@ int main(int argc, char *argv[])
     switch (getopt(argc, argv, "+rgcymwh")) {
 
 =======
+<<<<<<< HEAD
+
+    switch (getopt(argc, argv, "+rgcymwh")) {
+
+=======
 
     switch (getopt(argc, argv, "+rgcymwh")) {
 
 >>>>>>> 61475893edfdf17370d768c2a9f4f62cb6dd7288
+>>>>>>> 9bb3c5a25e57719dd64920f4871a0f825d9f84ac
         case ('r'): {
             color = COLOR_RED;
             break;
@@ -68,8 +79,12 @@ int main(int argc, char *argv[])
 <<<<<<< HEAD
         case ('h'): { 
 =======
+<<<<<<< HEAD
+        case ('h'): { 
+=======
         case ('h'): {
 >>>>>>> 61475893edfdf17370d768c2a9f4f62cb6dd7288
+>>>>>>> 9bb3c5a25e57719dd64920f4871a0f825d9f84ac
             print_usage();
             break;
         }
@@ -78,8 +93,12 @@ int main(int argc, char *argv[])
 <<<<<<< HEAD
             OPT_ERROR(argv[1][1]);
 =======
+<<<<<<< HEAD
+            OPT_ERROR(argv[1][1]);
+=======
             OPT_ERROR;
 >>>>>>> 61475893edfdf17370d768c2a9f4f62cb6dd7288
+>>>>>>> 9bb3c5a25e57719dd64920f4871a0f825d9f84ac
     }
 
     initscr();
