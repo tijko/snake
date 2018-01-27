@@ -10,13 +10,32 @@ void print_usage(void)
     printf("./snake [color_directive] or [print-usage]\n");
     printf("  Color-Directives:\n");
     printf("\t-c Cyan\n");
+    printf("\t-r Red\n");
     printf("\t-y Yellow\n");
-    printf("\t-m Magenta\n");
+    printf("\t-p Magenta\n");
     printf("\t-w White\n");
+    printf("\t-m Rainbow\n");
     printf("  Print-Usage:\n");
     printf("\t-h Help\n");
 
     exit(1);
+}
+
+#define COLOR_NUMS 6 
+
+short colors[] = {
+    COLOR_BLUE,
+    COLOR_RED,
+    COLOR_GREEN,
+    COLOR_YELLOW,
+    COLOR_MAGENTA,
+    COLOR_WHITE
+};
+
+static inline void init_all_colors(void)
+{
+    for (int i=0; i < COLOR_NUMS; i++)
+        init_pair(i + 1, colors[i], COLOR_BLACK);
 }
 
 int main(int argc, char *argv[])
@@ -24,7 +43,7 @@ int main(int argc, char *argv[])
     short color = COLOR_BLUE;
     opterr = 0;
 
-    switch (getopt(argc, argv, "+rgcymwh")) {
+    switch (getopt(argc, argv, "+rgcypmwh")) {
 
         case ('r'): {
             color = COLOR_RED;
@@ -46,13 +65,18 @@ int main(int argc, char *argv[])
             break;
         }
 
-        case ('m'): {
+        case ('p'): {
             color = COLOR_MAGENTA;
             break;
         }
 
         case ('w'): {
             color = COLOR_WHITE;
+            break;
+        }
+
+        case ('m'): {
+            color = 'm';
             break;
         }
 
@@ -68,16 +92,20 @@ int main(int argc, char *argv[])
     initscr();
     start_color();
     
+    if (color != 'm') {
+        init_pair(1, color, COLOR_BLACK);
+        attron(COLOR_PAIR(1));
+    } else
+        init_all_colors();
+
     noecho();
     cbreak();
  
     keypad(stdscr, TRUE);
     curs_set(0);
     nodelay(stdscr, TRUE);
-    init_pair(1, color, COLOR_BLACK); 
-    attron(COLOR_PAIR(1));
 
-    mainloop();
+    mainloop(color);
 
     endwin();
 
@@ -125,7 +153,7 @@ static inline void update_segment_coordinates(struct Snake *segment)
     }
 }
 
-void mainloop(void)
+void mainloop(int color)
 {
     int max_x, max_y;
 
@@ -134,6 +162,7 @@ void mainloop(void)
     getmaxyx(stdscr, max_y, max_x);
 
     struct Head *head = init_snake_head(max_x, max_y);
+    head->color = color;
 
     while ( 1 ) {
 
@@ -210,7 +239,7 @@ void mainloop(void)
 
     free_snake(head);
 
-    print_score(score, print_x, print_y);
+    print_score(score, print_x, print_y, color);
 }
 
 int draw_snake(struct Head *head)
@@ -220,6 +249,9 @@ int draw_snake(struct Head *head)
     int max_x = head->max_x;
     int max_y = head->max_y;
 
+    int multi_color = head->color == 'm' ? 1 : 0;
+    int current_color = 0;
+
     while (current != NULL) {
 
         if (current->x >= max_x || current->y >= max_y || 
@@ -228,6 +260,11 @@ int draw_snake(struct Head *head)
 
         if (check_segment_intersections(head, current))
             return 1;
+
+        if (multi_color) { 
+            attron(COLOR_PAIR(current_color % COLOR_NUMS + 1));
+            current_color++;
+        }
 
         mvaddch(current->y, current->x, ACS_DIAMOND);
         current = current->next_segment;
@@ -420,15 +457,15 @@ void pause(void)
     }
 }
 
-void print_score(int score, int x, int y)
+void print_score(int score, int x, int y, int color)
 {
     clear();
     mvprintw(y, x, "SCORE: %d", score);
     refresh();
-    play_again(x, y + 2);
+    play_again(x, y + 2, color);
 }
 
-void play_again(int x, int y)
+void play_again(int x, int y, int color)
 {
     mvprintw(y, x - 5, "PLAY AGAIN? (Y/N)");
 
@@ -437,7 +474,7 @@ void play_again(int x, int y)
 
             case (KEY_Y): {
                 clear();
-                mainloop();            
+                mainloop(color);
                 break;
             }
 
