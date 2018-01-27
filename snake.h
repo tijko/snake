@@ -28,26 +28,26 @@ struct Snake {
 };
 
 struct Head {
-    int ate;
+    int ate:2;
+    int multi_color:2;
+    int direction:4;
+    int max_x:12;
+    int max_y:12;
+    int food_x:12;
+    int food_y:12;
     int speed;
-    int max_x;
-    int max_y;
-    int food_x;
-    int food_y;
     int length;
-    int direction;
-    int color;
     struct Snake *body;
 };
 
 // Initialize the head of the snake object.
-struct Head *init_snake_head(int max_x, int max_y);
+struct Head *init_snake_head(void);
 
 // Initialize the body of the snake object.
 struct Snake *init_snake_body(int max_x, int max_y);
 
 // Main game loop.
-void mainloop(int color);
+void mainloop(struct Head *head);
 
 // Draws the snake body to window.
 int draw_snake(struct Head *head);
@@ -78,10 +78,10 @@ void free_snake(struct Head *snake_head);
 void free_snake_body(struct Snake *body);
 
 // Prints the end game score.
-void print_score(int score, int x, int y, int color);
+void print_score(int score, int x, int y, struct Head *head);
 
 // Asks if another game is to be played.
-void play_again(int x, int y, int color);
+void play_again(int x, int y, struct Head *head);
 
 // Pauses the game.
 void pause(void);

@@ -105,8 +105,14 @@ int main(int argc, char *argv[])
     curs_set(0);
     nodelay(stdscr, TRUE);
 
-    mainloop(color);
+    struct Head *head = init_snake_head();
+    if (!head)
+        goto end_game;
 
+    head->multi_color = color == 'm' ? 1 : 0;
+    mainloop(head);
+
+end_game:
     endwin();
 
     return 0;
@@ -153,16 +159,9 @@ static inline void update_segment_coordinates(struct Snake *segment)
     }
 }
 
-void mainloop(int color)
+void mainloop(struct Head *head)
 {
-    int max_x, max_y;
-
     int game_speed = 100;
-
-    getmaxyx(stdscr, max_y, max_x);
-
-    struct Head *head = init_snake_head(max_x, max_y);
-    head->color = color;
 
     while ( 1 ) {
 
@@ -214,7 +213,7 @@ void mainloop(int color)
 
             case (KEY_Q): {
                 free_snake(head);
-                return;
+                goto end_loop;
             }
 
             default: 
@@ -226,9 +225,7 @@ void mainloop(int color)
         napms(game_speed);
         update_segment_direction(head);
 
-        getmaxyx(stdscr, max_y, max_x);
-        head->max_x = max_x;
-        head->max_y = max_y;
+        getmaxyx(stdscr, head->max_y, head->max_x);
 
         clear();
     }
@@ -237,9 +234,10 @@ void mainloop(int color)
     int print_x = (head->max_x - 8) / 2;
     int print_y = head->max_y / 2;
 
-    free_snake(head);
+    print_score(score, print_x, print_y, head);
 
-    print_score(score, print_x, print_y, color);
+end_loop:
+    return;
 }
 
 int draw_snake(struct Head *head)
@@ -249,7 +247,7 @@ int draw_snake(struct Head *head)
     int max_x = head->max_x;
     int max_y = head->max_y;
 
-    int multi_color = head->color == 'm' ? 1 : 0;
+    int multi_color = head->multi_color;
     int current_color = 0;
 
     while (current != NULL) {
@@ -376,15 +374,17 @@ int is_valid_position(struct Snake *segment, int x, int y)
     return 0;
 }
 
-struct Head *init_snake_head(int max_x, int max_y)
+struct Head *init_snake_head(void)
 {
-    struct Head *new_head = malloc(sizeof *new_head);
-    new_head->max_x = max_x;
-    new_head->max_y = max_y;
+    struct Head *new_head;
+    if (!(new_head = malloc(sizeof *new_head)))
+        return NULL;
+
+    getmaxyx(stdscr, new_head->max_y, new_head->max_x);
     new_head->direction = WEST;
     new_head->length = SNAKE_INIT_LEN;
     new_head->ate = 1;
-    new_head->body = init_snake_body(max_x, max_y);
+    new_head->body = init_snake_body(new_head->max_x, new_head->max_y);
 
     return new_head;
 }
@@ -457,15 +457,15 @@ void pause(void)
     }
 }
 
-void print_score(int score, int x, int y, int color)
+void print_score(int score, int x, int y, struct Head *head)
 {
     clear();
     mvprintw(y, x, "SCORE: %d", score);
     refresh();
-    play_again(x, y + 2, color);
+    play_again(x, y + 2, head);
 }
 
-void play_again(int x, int y, int color)
+void play_again(int x, int y, struct Head *head)
 {
     mvprintw(y, x - 5, "PLAY AGAIN? (Y/N)");
 
@@ -474,16 +474,30 @@ void play_again(int x, int y, int color)
 
             case (KEY_Y): {
                 clear();
-                mainloop(color);
+                int multi = head->multi_color;
+                free_snake(head);
+                head = init_snake_head();
+                if (!head)
+                    goto end_game;
+                head->multi_color = multi;
+                mainloop(head);
                 break;
             }
 
-            case (KEY_N):
-                return;
+            case (KEY_N): {
+                mvprintw(y - 5, x - 1, "GOOD GAME!");
+                refresh();
+                napms(1000);
+                free_snake(head);
+                goto end_game;
+            }
 
-            default:
+            default: 
                 break;
         }
     }
+
+end_game:
+    return;
 }
 
