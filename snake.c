@@ -306,6 +306,12 @@ void add_segment(struct Head *head)
     }
 
     segment->next_segment = create_segment(segment->prev_direction, x, y);
+
+    if (!segment->next_segment) {
+        free_snake(head);
+        endwin();
+        exit(1);
+    }
 }
 
 int check_segment_intersections(struct Head *head, struct Snake *segment)
@@ -344,7 +350,7 @@ void move_snake(struct Head *head)
         current = current->next_segment;
     }
 
-    if (head->ate)
+    if (head->ate) 
         add_segment(head);
 }
 
@@ -386,6 +392,11 @@ struct Head *init_snake_head(void)
     new_head->ate = 1;
     new_head->body = init_snake_body(new_head->max_x, new_head->max_y);
 
+    if (!new_head->body) {
+        free(new_head);
+        return NULL;
+    }
+
     return new_head;
 }
 
@@ -397,12 +408,19 @@ struct Snake *init_snake_body(int max_x, int max_y)
     start_y = max_y / 2;
 
     struct Snake *segment = create_segment(WEST, start_x, start_y);
+    if (!segment)
+        return NULL;
 
     struct Snake *current = segment;
 
     for (int i=0; i < SNAKE_INIT_LEN - 1; i++) {
         struct Snake *next = create_segment(current->prev_direction,
                                             current->x + 1, current->y);
+        if (!next) {
+            free_snake_body(segment);
+            return NULL;
+        }
+
         current->next_segment = next;
         current = current->next_segment;
     }
@@ -412,7 +430,11 @@ struct Snake *init_snake_body(int max_x, int max_y)
 
 struct Snake *create_segment(int direction, int x, int y)
 {
-    struct Snake *segment = malloc(sizeof *segment);
+    struct Snake *segment;
+
+    if (!(segment = malloc(sizeof *segment)))
+        return NULL;
+
     segment->next_segment = NULL;
     segment->prev_direction = direction;
     segment->direction = direction;
