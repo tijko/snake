@@ -35,6 +35,11 @@ struct Head {
     int max_y:12;
     int food_x:12;
     int food_y:12;
+    int dist;
+    int food_dist;
+    int total_dist;
+    int min_dist;
+    int bonus;
     int speed;
     int length;
     struct Snake *body;

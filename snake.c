@@ -340,6 +340,7 @@ void move_snake(struct Head *head)
    
     int food_x = head->food_x;
     int food_y = head->food_y;
+    head->dist++;
 
     while (current != NULL) {
         update_segment_coordinates(current);
@@ -350,8 +351,13 @@ void move_snake(struct Head *head)
         current = current->next_segment;
     }
 
-    if (head->ate) 
+    if (head->ate) {
+        head->total_dist += head->dist;
+        head->min_dist += head->food_dist;
+        if (head->dist == head->food_dist)
+            head->bonus++;
         add_segment(head);
+    }
 }
 
 void place_snake_food(struct Head *head)
@@ -370,6 +376,9 @@ void place_snake_food(struct Head *head)
     mvaddch(food_y, food_x, ACS_PI);
     head->food_x = food_x;
     head->food_y = food_y;
+    head->food_dist = abs(head->body->x - food_x) +
+                      abs(head->body->y - food_y);
+    head->dist = 0;
 }
 
 int is_valid_position(struct Snake *segment, int x, int y)
@@ -483,6 +492,9 @@ void print_score(int score, int x, int y, struct Head *head)
 {
     clear();
     mvprintw(y, x, "SCORE: %d", score);
+    mvprintw(y - 2, x - 2, "DISTANCE: %d", head->total_dist);
+    mvprintw(y - 3, x - 4, "MIN-DISTANCE: %d", head->min_dist);
+    mvprintw(y - 4, x - 1, "BONUS: %d", head->bonus);
     refresh();
     play_again(x, y + 2, head);
 }
@@ -507,7 +519,7 @@ void play_again(int x, int y, struct Head *head)
             }
 
             case (KEY_N): {
-                mvprintw(y - 5, x - 1, "GOOD GAME!");
+                mvprintw(y - 1, x - 1, "GOOD GAME!");
                 refresh();
                 napms(1000);
                 free_snake(head);
