@@ -45,45 +45,37 @@ int main(int argc, char *argv[])
 
     switch (getopt(argc, argv, "+rgcypmwh")) {
 
-        case ('r'): {
+        case ('r'): 
             color = COLOR_RED;
             break;
-        }
 
-        case ('g'): {
+        case ('g'): 
             color = COLOR_GREEN;
             break;
-        }
 
-        case ('c'): {
+        case ('c'): 
             color = COLOR_CYAN;
             break;
-        }
 
-        case ('y'): {
+        case ('y'):
             color = COLOR_YELLOW;
             break;
-        }
 
-        case ('p'): {
+        case ('p'): 
             color = COLOR_MAGENTA;
             break;
-        }
 
-        case ('w'): {
+        case ('w'): 
             color = COLOR_WHITE;
             break;
-        }
 
-        case ('m'): {
+        case ('m'): 
             color = 'm';
             break;
-        }
 
-        case ('h'): { 
+        case ('h'): 
             print_usage();
             break;
-        }
 
         case ('?'):
             OPT_ERROR(argv[1][1]);
@@ -137,25 +129,21 @@ static inline void update_segment_coordinates(struct Snake *segment)
 {
     switch (segment->direction) {
 
-        case (NORTH): {
+        case (NORTH): 
             segment->y--;
             break;
-        }
 
-        case (SOUTH): {
+        case (SOUTH): 
             segment->y++;
             break;
-        }
 
-        case (EAST): {
+        case (EAST): 
             segment->x++;
             break;
-        }
 
-        case (WEST): {
+        case (WEST): 
             segment->x--;
             break;
-        }
     }
 }
 
@@ -476,9 +464,8 @@ void pause(void)
 
         switch (key) {
 
-            case (KEY_P): {
+            case (KEY_P): 
                 return;
-            }
 
             case (KEY_Q): {
                 ungetch(key);
