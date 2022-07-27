@@ -1,5 +1,5 @@
 CC = gcc
-FLAGS = -g -Wall -Wextra -pedantic -lcursesw
+FLAGS = -g -Wall -Wextra -pedantic -lncursesw
 
 TARGET = snake
 
